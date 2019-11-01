@@ -1,0 +1,23 @@
+{
+  "name": "tp-ciborg",
+  "version": "1.0.0",
+  "description": "",
+  "main": "board-games-data.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guiufernandes1234567/PI-1920i-LI52D-G16.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guiufernandes1234567/PI-1920i-LI52D-G16/issues"
+  },
+  "homepage": "https://github.com/guiufernandes1234567/PI-1920i-LI52D-G16#readme",
+  "dependencies": {
+    "hashmap": "^2.4.0",
+    "request": "^2.88.0"
+  }
+}
