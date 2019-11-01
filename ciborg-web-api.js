@@ -2,35 +2,33 @@
 
 let ciborgServices = require('./ciborg-services')
 
-
-//request('https://www.boardgameatlas.com/api/search?order_by=popularity&ascending=false&client_id=SB1VGnDv7M',processResponse)
+function FinishResponse(resp) {
+    this.executeOnSuccess = (gamesArray)=>{
+    resp.statusCode = 200
+    resp.setHeader('content-type', 'application/json')
+    resp.end(JSON.stringify(gamesArray)) 
+},
+this.executeOnError = () =>{
+        resp.statusCode = 500
+        resp.end()
+}
+}
 
 function getPopularGames(req,resp){
-    try{
-        ciborgServices.getPopularGames(executeOnSuccess,executeOnError);
+        ciborgServices.getPopularGames(new FinishResponse(resp));
+}
 
-        function executeOnSuccess(gamesArray) {
-            resp.statusCode = 200
-            resp.setHeader('content-type', 'application/json')
-            resp.end(JSON.stringify(gamesArray)) 
-        }
-
-        function executeOnError() {
-                resp.statusCode = 500
-                resp.end()
-        }
-    } catch (exception){
-        resp.statusCode = 500
-        //TODO a olhar p/ que ta escrito na nossa documentacao
-    }
+function getGamesByName(req,resp){
+    let nameOfGame = req.url.split('/')[2]
+    ciborgServices.getGamesByName(nameOfGame,new FinishResponse(resp))
 }
 
 
-
-function getGamesByName(req,resp){resp.end(`chegou a funcao ${getGamesByName.name}`)}
 function getAllLists(req,resp){resp.end(`chegou a funcao ${getAllLists.name}`)}
 function getListByName(req,resp){resp.end(`chegou a funcao ${getListByName.name}`)}
-function getGamesBoundByDuration(req,resp){resp.end(`chegou a funcao ${getGamesBoundByDuration.name}`)}
+
+function getGamesBoundByDuration(req,resp){
+}
 
 
 

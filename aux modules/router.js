@@ -14,8 +14,6 @@ function Pair(path, funToCall){
 
 let toReturn = function (req, resp){
     let pairArray = methods[req.method.toUpperCase()]
-
-
     let splitedUrl = req.url.split('/')
     let wrongUrl = false
     let index = 0

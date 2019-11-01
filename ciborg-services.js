@@ -4,8 +4,8 @@ let boardGamesData = require('./board-games-data')
 
 module.exports = {
     getPopularGames:getPopularGames,
-    /*getGamesByName:getGamesByName,
-    getAllLists:getAllLists,
+    getGamesByName:getGamesByName,
+    /*getAllLists:getAllLists,
     getListByName:getListByName,
     getGamesBoundByDuration:getGamesBoundByDuration,
     createList:createList,
@@ -14,7 +14,11 @@ module.exports = {
     removeGameFromList:removeGameFromList*/
 }
 
-function getPopularGames(executeOnSuccess,executeOnError){
-    boardGamesData.getPopularGames(executeOnSuccess,executeOnError)
+function getPopularGames(finishResponse){
+    boardGamesData.getPopularGames(finishResponse)
+}
+
+function getGamesByName(nameOfGame,finishResponse) {
+    boardGamesData.getGamesByName(nameOfGame,finishResponse)
 }
 
