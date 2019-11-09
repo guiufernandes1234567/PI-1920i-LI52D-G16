@@ -12,8 +12,12 @@ function FinishResponse(resp) {
     resp.setHeader('content-type', 'application/json')
     resp.end(JSON.stringify(gamesArray)) 
 },
-this.executeOnError = () =>{
-        resp.statusCode = 500
+this.executeOnError = (statusCode,errorMessage) =>{
+        resp.statusCode = statusCode
+        if(errorMessage) {
+            resp.setHeader('content-type', 'application/json')
+            resp.end({message: errorMessage})
+        }
         resp.end()
 }
 }
@@ -28,8 +32,9 @@ function PostOrPutResponse(resp, req){
             uri: 'lists/' + id
         }))
     }
-    this.executeOnError = () =>{
-        resp.statusCode = 500   //TODO
+    this.executeOnError = (statusCode,errorMessage) =>{
+        resp.statusCode = statusCode
+        if(errorMessage) resp.end(errorMessage)
         resp.end()
 }
 }
@@ -71,41 +76,7 @@ function getGamesBoundByDuration(req,resp){
 
 function createList(req,resp){
     let list = JSON.parse(req.body)
-    list.games = []/*[
-            {
-                id: "kPDxpJZ8PD",
-                name: "Spirit Island",
-                year_published: 2016,
-                min_players: 1,
-                max_players: 4,
-                min_playtime: 90,
-                max_playtime: 120,
-                min_age: 13,
-                description:"ola"
-            },
-            {
-                id: "RLlDWHh7hR",
-                name: "Gloomhaven",
-                year_published: 2017,
-                min_players: 1,
-                max_players: 4,
-                min_playtime: 60,
-                max_playtime: 150,
-                min_age: 12,
-                description:"tudo"
-            },
-            {
-                id: "i5Oqu5VZgP",
-                name: "Azul",
-                year_published: 2017,
-                min_players: 2,
-                max_players: 4,
-                min_playtime: 30,
-                max_playtime: 60,
-                min_age: 8,
-                description:"fixe"
-            }     
-    ]*/
+    //list.games = []
     ciborgServices.createList(list, new PostOrPutResponse(resp, req))
 }
 
@@ -146,7 +117,7 @@ module.exports = {
     getPopularGames:getPopularGames,
     getGamesByName:getGamesByName,
     getAllLists:getAllLists,
-    getListByName:getListByName,//adicionar ao router!!
+    //getListByName:getListByName,//adicionar ao router
     getGamesBoundByDuration:getGamesBoundByDuration,
     createList:createList,
     editList:editList,
@@ -159,3 +130,38 @@ module.exports = {
 
 
 
+/*[
+            {
+                id: "kPDxpJZ8PD",
+                name: "Spirit Island",
+                year_published: 2016,
+                min_players: 1,
+                max_players: 4,
+                min_playtime: 90,
+                max_playtime: 120,
+                min_age: 13,
+                description:"ola"
+            },
+            {
+                id: "RLlDWHh7hR",
+                name: "Gloomhaven",
+                year_published: 2017,
+                min_players: 1,
+                max_players: 4,
+                min_playtime: 60,
+                max_playtime: 150,
+                min_age: 12,
+                description:"tudo"
+            },
+            {
+                id: "i5Oqu5VZgP",
+                name: "Azul",
+                year_published: 2017,
+                min_players: 2,
+                max_players: 4,
+                min_playtime: 30,
+                max_playtime: 60,
+                min_age: 8,
+                description:"fixe"
+            }     
+    ]*/

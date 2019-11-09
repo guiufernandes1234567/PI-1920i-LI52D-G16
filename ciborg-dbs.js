@@ -3,7 +3,7 @@ let request = require("request")
 
 module.exports = {
     getAllLists:getAllLists,
-    getListByName:getListByName,
+    //getListByName:getListByName,
     getGamesBoundByDuration:getGamesBoundByDuration,
     createList:createList,
     editList:editList,
@@ -25,7 +25,7 @@ function getElasticOptions(urlParam, bodyParam) {
 
 function processResponse(error, response, body) {
     if (error) {
-        this.executeOnError()
+        this.executeOnError(502)
     }  //TODO lidar com erros de bad request etc...
     this.executeOnSuccess(body._id, body.result)
 }
@@ -33,7 +33,6 @@ function processResponse(error, response, body) {
 function createList(list, finishResponse){
     let options = getElasticOptions(elasticUrl + 'lists/_doc/', list)
     request.post(options, processResponse.bind(finishResponse))
-      
 }
 
 function editList(list, listId, finishResponse) {
@@ -45,7 +44,7 @@ function editList(list, listId, finishResponse) {
             processResponse.bind(finishResponse))
         
         }else{
-            //TODO erro: lista que quer editar nao existe
+            finishResponse.executeOnError(404)
         }
     })
 }
@@ -70,13 +69,13 @@ function processAllLists(error, response, body) {
     if (error) {
         this.executeOnError()
     }
-    this.executeOnSuccess(body.hits.hits.map((value)=>{   //TODO: mostrar mais que 10 items
+    this.executeOnSuccess(body.hits.hits.map((value)=>{   
         value._source.id = value._id   //pra se ver facilmente os id's todos
         return value._source
     }))
 }
 
-function getListByName(listName, finishResponse) {
+/*function getListByName(listName, finishResponse) {
     let options = getElasticOptions(elasticUrl + 'lists/_search', {query: { match: { name: listName } }})
     request.get(options, (error, response, body) => {
         if (error) {
@@ -84,7 +83,7 @@ function getListByName(listName, finishResponse) {
         }
         finishResponse.executeOnSuccess(body._source)
     })
-}
+}*/
 
 function getListById(listId, finishResponse) {
     let options = getElasticOptions(elasticUrl + 'lists/_doc/' + listId)
