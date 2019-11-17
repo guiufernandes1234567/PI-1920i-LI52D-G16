@@ -18,12 +18,12 @@ module.exports = (dataApi,database)=>{
     }
 }
 
-function getPopularGames(finishResponse){
-    this.dataApi.getPopularGames(finishResponse)
+function getPopularGames(){
+    return this.dataApi.getPopularGames()
 }
 
-function getGamesByName(nameOfGame,finishResponse) {
-    this.dataApi.searchGamesByName(nameOfGame,finishResponse)
+function getGamesByName(nameOfGame) {
+    return this.dataApi.searchGamesByName(nameOfGame)
 }
 
 function createList(list, finishResponse) {
@@ -31,33 +31,34 @@ function createList(list, finishResponse) {
     this.dataBase.createList(list, finishResponse)
 }
 
-function getAllLists(finishResponse) {
-    this.dataBase.getAllLists(finishResponse)
+function getAllLists() {
+    return this.dataBase.getAllLists()
 }
 
-function getListById(listId, finishResponse) {
-    this.dataBase.getListById(listId,finishResponse)
+function getListById(listId) {
+    return this.dataBase.getListById(listId)
 }
 
-function editList(list, listId, finishResponse) {
-    if(!(name in list) || !(description in list)) finishResponse.executeOnError(400, 'check the list submitted')
-    this.dataBase.editList(list, listId, finishResponse)
+function editList(list, listId) {
+    if(!('name' in list) || !('description' in list)) return Promise.resolve('check the list submitted')
+    return this.dataBase.editList(list, listId)
 }
 
-function addGameToList(gameName, listId, finishResponse) {
-    this.dataApi.getGamesByName(gameName, (game)=>{
-        this.dataBase.addGameToList(listId, game, finishResponse)
+function addGameToList(gameName, listId) {
+    return this.dataApi.getGamesByName(gameName).then((game)=>{
+        if(!game) throw {error : "game not found"}
+        return this.dataBase.addGameToList(listId, game)
     })
 }
 
-function removeGameFromList(gameName, listId, finishResponse) {
-    this.dataApi.getGamesByName(gameName, (game)=>{
-        if(game==undefined) finishResponse.executeOnError(400, 'game not found')
-        this.dataBase.removeGameFromList(listId, game, finishResponse)
-    })   
+function removeGameFromList(gameName, listId) {
+    return this.dataApi.getGamesByName(gameName).then((game)=>{
+        if(!game) throw {error : "game not found"}
+        return this.dataBase.removeGameFromList(listId, game)
+    })
 }
 
-function getGamesBoundByDuration(listId, min_value, max_value, FinishResponse){
+function getGamesBoundByDuration(listId){
     //if(min_value>=max_value || min_value<0)finishResponse.executeOnError(400, 'parameters not accepted')
-    this.dataBase.getGamesBoundByDuration(listId, min_value, max_value, FinishResponse)
+    return this.dataBase.getGamesBoundByDuration(listId)
 }

@@ -1,24 +1,36 @@
 'use strict';
 
+var express = require('./node_modules/express')
+var app = express()
     
 const PORT = 8000
 const ciborgWebApi = require('./ciborg-web-api')
-const http = require('http')
+//const http = require('http')
 
-const router = require('./aux modules/router');
+//const router = require('./aux modules/router');
 
-router.get('/game/mostpopular=true', ciborgWebApi.getPopularGames)
-router.get('/game/:name', ciborgWebApi.getGamesByName)
-router.get('/lists', ciborgWebApi.getAllLists)
-router.get('/lists/:id', ciborgWebApi.getListById)
-router.get('/lists/:id/:min_value&:max_value',ciborgWebApi.getGamesBoundByDuration)
+app.use((request, response, next)=>{
+    let start = Date.now()
+    response.on('finish', ()=>console.log((Date.now()) - start))
+    next()
+})
 
-router.post('/lists', ciborgWebApi.createList)
+app.use(express.json())
 
-router.put('/lists/:id', ciborgWebApi.editList)
-router.put('/lists/:id/:name',ciborgWebApi.addGameToList)
+app.get('/game/mostpopular', ciborgWebApi.getPopularGames)
+app.get('/game/:name', ciborgWebApi.getGamesByName)
+app.get('/lists', ciborgWebApi.getAllLists)
+app.get('/lists/:id', ciborgWebApi.getListById)
+app.get('/lists/:id/:min_value&:max_value',ciborgWebApi.getGamesBoundByDuration)
 
-router.delet('/lists/:id/:name',ciborgWebApi.removeGameFromList)
+app.post('/lists', ciborgWebApi.createList)
 
-let server = http.createServer(router)
-server.listen(PORT, () => console.log(`Server listening on port ${PORT}`))
+app.put('/lists/:id', ciborgWebApi.editList)
+app.put('/lists/:id/:name',ciborgWebApi.addGameToList)
+
+app.delete('/lists/:id/:name',ciborgWebApi.removeGameFromList)
+
+
+
+//let server = http.createServer(router)
+app.listen(PORT, () => console.log(`Server listening on port ${PORT}`))

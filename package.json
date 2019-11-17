@@ -18,6 +18,7 @@
   "homepage": "https://github.com/guiufernandes1234567/PI-1920i-LI52D-G16#readme",
   "dependencies": {
     "chai": "^4.2.0",
+    "express": "^4.17.1",
     "hashmap": "^2.4.0",
     "mocha": "^6.2.2",
     "request": "^2.88.0"

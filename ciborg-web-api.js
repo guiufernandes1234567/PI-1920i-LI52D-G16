@@ -3,24 +3,29 @@
 let ciborgGamesData = require('./board-games-data')
 let ciborgDataBase = require('./ciborg-dbs')
 let ciborgServices = require('./ciborg-services')(ciborgGamesData, ciborgDataBase)
+let gameObject = require('./aux modules/game-object') 
 
 
-
-function FinishResponse(resp) {
-    this.executeOnSuccess = (gamesArray)=>{
-    resp.statusCode = 200
-    resp.setHeader('content-type', 'application/json')
-    resp.end(JSON.stringify(gamesArray)) 
-},
-this.executeOnError = (statusCode,errorMessage) =>{
-        resp.statusCode = statusCode
-        if(errorMessage) {
-            resp.setHeader('content-type', 'application/json')
-            resp.end({message: errorMessage})
-        }
-        resp.end()
+function fromBodyToArrayOfGames(body){
+    let lightArrayOfGames = []
+    var index = 0
+    JSON.parse(body).games.map(heavyGame => lightArrayOfGames[index++] =
+        new gameObject(
+            heavyGame.id,
+            heavyGame.name,
+            heavyGame.year_published,
+            heavyGame.min_players,
+            heavyGame.max_players,
+            heavyGame.min_playtime,
+            heavyGame.max_playtime,
+            heavyGame.min_age,
+            heavyGame.description
+            ) 
+            )
+            return lightArrayOfGames
 }
-}
+
+
 
 function PostOrPutResponse(resp, req){
     this.executeOnSuccess = (id, staus) => {
@@ -40,39 +45,52 @@ function PostOrPutResponse(resp, req){
 }
 
 function getPopularGames(req,resp){
-    ciborgServices.getPopularGames(new FinishResponse(resp));
+    ciborgServices.getPopularGames().then((requestBody)=>{
+        resp.status(200).json(fromBodyToArrayOfGames(requestBody.body))
+    }).catch((error)=>{
+        resp.status(400).json({message: error.toString()}) //TODO: ver se as mensagens de erro fazem sentido passarem ao cliente
+    })
 }
 
 function getGamesByName(req,resp){
-    let nameOfGame = req.url.split('/')[2]
-    ciborgServices.getGamesByName(nameOfGame,new FinishResponse(resp))
+    ciborgServices.getGamesByName(req.params.name).then((requestBody)=>{
+        resp.status(200).json(fromBodyToArrayOfGames(requestBody))
+    }).catch((error)=>{
+        resp.status(400).json({message: error.toString()}) //TODO: ver se as mensagens de erro fazem sentido passarem pro cliente
+    })
 }
 
 function getAllLists(req,resp){
-    ciborgServices.getAllLists(new FinishResponse(resp))
+    ciborgServices.getAllLists().then((requestBody)=>{
+        let arrayOfLists = requestBody.hits.hits.map((value)=>{   
+            value._source.id = value._id   //pra se ver facilmente os id's todos
+            return value._source})
+        resp.status(200).json(arrayOfLists)}).catch(()=>{resp.status(400)})
 }
 
-function getListByName(req,resp){
+/*function getListByName(req,resp){
     let listName = req.url.split('/').pop()
     ciborgServices.getListByName(listName,new FinishResponse(resp))
-}
+}*/
 
 function getListById(req,resp){
-    let listId = req.url.split('/').pop()
-    ciborgServices.getListById(listId,new FinishResponse(resp))
+//    let listId = req.url.split('/').pop()
+    ciborgServices.getListById(req.params.id).then((requestBody)=>{
+        resp.status(200).json(requestBody._source)
+    }).catch(()=>{resp.status(400)})
 }
 
 // /lists/:id/min_value=?&max_value=?
 function getGamesBoundByDuration(req,resp){
-    let arrayOfPath = req.url.split('/')
-    let listId = arrayOfPath[2]
-    let parametersArray = arrayOfPath[3].split('&')
-    let min_value = parametersArray[0].split('min_value=')[1]
-    let max_value = parametersArray[1].split('max_value=')[1]
-    ciborgServices.getGamesBoundByDuration(listId, min_value, max_value, new FinishResponse(resp))
+    ciborgServices.getGamesBoundByDuration(req.params.id).then((requestBody)=>{
+        let filteredArray = requestBody._source.games.filter
+        (item => ((req.params.min_value.split('=')[1] < item.max_playtime) && 
+        (req.params.max_value.split('=')[1] > item.max_playtime)))
+        resp.status(200).json(filteredArray.sort((a,b)=>{return a.max_playtime-b.max_playtime}))
+    }).catch((error)=>{
+        resp.status(400).json({message: error.toString()}) //TODO: ver se as mensagens de erro fazem sentido passarem pro cliente
+    })
 }
-
-
 
 function createList(req,resp){
     let list = JSON.parse(req.body)
@@ -80,37 +98,47 @@ function createList(req,resp){
     ciborgServices.createList(list, new PostOrPutResponse(resp, req))
 }
 
-
-
 function editList(req,resp){
-    let list = JSON.parse(req.body)
-    ciborgServices.editList(list, req.url.split('/').pop(), new PostOrPutResponse(resp, req))
+    ciborgServices.editList(req.body, req.params.id).then(
+        (requestResp) => {
+            resp.setHeader('location', 'lists/' + req.params.id)
+            resp.status(201).json({
+                status : "list " + requestResp.body.result,
+                uri: 'lists/' + req.params.id
+            })
+        }
+    ).catch((error) =>{
+        resp.status(400)
+    //    if(error) resp.json(error)
+        resp.json(error)
+})
+   // ciborgServices.editList(list, req.url.split('/').pop(), new PostOrPutResponse(resp, req))
 }
 
 function addGameToList(req,resp){
-    let pathArray = req.url.split('/')
-    let gameName = pathArray.pop()
-    let listId = pathArray.pop()
-    ciborgServices.addGameToList(gameName, listId, ()=>{
-        resp.statusCode = 201
-        resp.setHeader('content-type', 'application/json')
-        resp.end(JSON.stringify({
+    ciborgServices.addGameToList(req.params.name, req.params.id).then(()=>{
+        resp.status(201).json({
             status : "game added successfully",
-            uri: `lists/${listId}/${gameName}`
-    }))})
+            uri: `lists/${req.params.id}/${req.params.name}`
+    })}).catch(
+        (error)=>{
+            let status = ("erro" in error)? 404 : 400 
+            resp.status(status).json(error)
+        }
+    )
 }
 
 function removeGameFromList(req,resp){
-    let pathArray = req.url.split('/')
-    let gameName = pathArray.pop()
-    let listId = pathArray.pop()
-    ciborgServices.removeGameFromList(gameName, listId, ()=>{
-        resp.statusCode = 200
-        resp.setHeader('content-type', 'application/json')
-        resp.end(JSON.stringify({
+    ciborgServices.removeGameFromList(req.params.name, req.params.id).then(()=>{
+        resp.status(201).json({
             status : "game removed successfully",
-            uri: `lists/${listId}/${gameName}`
-    }))})
+            uri: `lists/${req.params.id}/${req.params.name}`
+    })}).catch(
+        (error)=>{
+            let status = ("erro" in error)? 404 : 400 
+            resp.status(status).json(error)
+        }
+    )
 }
 
 module.exports = {
