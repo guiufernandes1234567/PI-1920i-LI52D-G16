@@ -2,6 +2,7 @@
 
 let ciborgGamesData = require('./board-games-data')
 let ciborgDataBase = require('./ciborg-dbs')
+ciborgDataBase()
 let ciborgServices = require('./ciborg-services')(ciborgGamesData, ciborgDataBase)
 let gameObject = require('./aux modules/game-object') 
 

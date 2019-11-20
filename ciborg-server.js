@@ -2,12 +2,11 @@
 
 var express = require('./node_modules/express')
 var app = express()
-    
+
+
+
 const PORT = 8000
 const ciborgWebApi = require('./ciborg-web-api')
-//const http = require('http')
-
-//const router = require('./aux modules/router');
 
 app.use((request, response, next)=>{
     let start = Date.now()

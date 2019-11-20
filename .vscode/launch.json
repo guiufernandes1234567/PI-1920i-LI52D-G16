@@ -14,7 +14,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}\\board-games-data.js"
+            "program": "${workspaceFolder}\\ciborg-server.js"
         }
     ]
 }

@@ -3,16 +3,27 @@ let request = require("request")
 let requestPromise = require('./aux modules/cbToPromise')
 
 
-module.exports = {
-    getAllLists:getAllLists,
-    //getListByName:getListByName,
-    getGamesBoundByDuration:getGamesBoundByDuration,
-    createList:createList,
-    editList:editList,
-    addGameToList:addGameToList,
-    getListById:getListById,
-    removeGameFromList:removeGameFromList
+function initElastic(){
+    console.log('in DB')
+    request.head({
+        json : true,
+        headers: {'Content-Type': 'application/json'},
+        url : 'http://localhost:9200/lists',
+    },(error, response, body)=>{
+        if(error) return console.log('check elastic server')
+        if(response.statusCode == 404){
+            request.put('http://localhost:9200/lists')
+        }
+    } )
 }
+initElastic.getAllLists = getAllLists
+//getListByName:getListByName,
+initElastic.getGamesBoundByDuration = getGamesBoundByDuration
+initElastic.createList = createList
+initElastic.editList = editList
+initElastic.addGameToList = addGameToList
+initElastic.getListById = getListById
+initElastic.removeGameFromList = removeGameFromList
 
 
 
@@ -95,3 +106,6 @@ function removeGameFromList(listId, game){
         return requestPromise.putHttpPromise(optionsWithList)
     })
 }
+
+
+module.exports = initElastic

@@ -2,7 +2,7 @@
   "name": "tp-ciborg",
   "version": "1.0.0",
   "description": "",
-  "main": "board-games-data.js",
+  "main": "board-server.js",
   "scripts": {
     "test": "Tests.js"
   },
