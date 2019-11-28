@@ -19,6 +19,7 @@
   "dependencies": {
     "chai": "^4.2.0",
     "express": "^4.17.1",
+    "fs-extra": "^8.1.0",
     "hashmap": "^2.4.0",
     "mocha": "^6.2.2",
     "request": "^2.88.0"
