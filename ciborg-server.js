@@ -4,7 +4,8 @@ var express = require('./node_modules/express')
 var app = express()
 
 
-const PORT = 8000
+const PORT = require('./setup').PORT
+
 const ciborgWebApi = require('./ciborg-web-api')
 const authentication = require("./authentication")
 const morgan = require('morgan') 

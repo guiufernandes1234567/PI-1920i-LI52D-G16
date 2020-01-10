@@ -1,21 +1,33 @@
 const elasticUrl = 'http://localhost:9200/'     //meter em ficheiro mais tarde
 let request = require("request")
 let requestPromise = require('./aux modules/cbToPromise')
+const startElastic = require('./setup').startElastic
 
 
-function initElastic(){
+function initElastic(attempts = 1){
     console.log('in DB')
+    startElastic()
     request.head({
         json : true,
         headers: {'Content-Type': 'application/json'},
         url : 'http://localhost:9200/lists',
     },(error, response, body)=>{
-        if(error) return console.log('check elastic server')
-        if(response.statusCode == 404){
-            request.put('http://localhost:9200/lists')
-        }
+        if(error) {
+            console.log('something wrong in elastic server')
+            if(attempts<5){
+                setTimeout(()=>{
+                    console.log('trying again... attempt nr '+ attempts++)
+                    initElastic(attempts)
+                },10000)
+            }
+        } else{ if(response.statusCode == 404)request.put('http://localhost:9200/lists')
+             console.log(`elastic operational after ${attempts} attempts`)
+    }
+        
+        
     } )
 }
+
 initElastic.getAllLists = getAllLists
 //getListByName:getListByName,
 initElastic.getGamesBoundByDuration = getGamesBoundByDuration

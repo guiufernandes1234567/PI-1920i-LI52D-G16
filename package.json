@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node ciborg-server.js",
     "start-dev": "nodemon ciborg-server.js",
-    "test": "Tests.js"
+    "test": "Tests.js",
+    "install": "node setup.js"
   },
   "repository": {
     "type": "git",
