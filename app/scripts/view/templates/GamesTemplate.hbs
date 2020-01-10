@@ -1,0 +1,12 @@
+    {{#each this}}
+    <li><b> <a href="#game/{{this.name}}"> name: {{this.name}}</a></b></li>
+    <li>id: {{this.id}}</li>
+    <li>year of publishment: {{this.year_published}}</li>
+    <li>min players: {{this.min_players}}</li>
+    <li>max players: {{this.max_players}}</li>
+    <li>min playtime: {{this.min_playtime}}</li>
+    <li>max playtime: {{this.max_playtime}}</li>
+    <li>description: {{this.description}}</li> 
+    {{/each}}
+
+    <div id="message"></div>

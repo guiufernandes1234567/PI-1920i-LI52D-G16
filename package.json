@@ -2,8 +2,10 @@
   "name": "tp-ciborg",
   "version": "1.0.0",
   "description": "",
-  "main": "board-server.js",
+  "main": "ciboard-server.js",
   "scripts": {
+    "start": "node ciborg-server.js",
+    "start-dev": "nodemon ciborg-server.js",
     "test": "Tests.js"
   },
   "repository": {
@@ -22,6 +24,17 @@
     "fs-extra": "^8.1.0",
     "hashmap": "^2.4.0",
     "mocha": "^6.2.2",
+    "nodemon": "^2.0.1",
     "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "cookie-parser": "^1.4.4",
+    "express-session": "^1.17.0",
+    "morgan": "^1.9.1",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "session-file-store": "^1.3.1",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
   }
 }

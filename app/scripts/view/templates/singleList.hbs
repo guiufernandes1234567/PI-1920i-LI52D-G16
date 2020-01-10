@@ -1,0 +1,16 @@
+Get Games By Duration <br>
+<form id="gamesByDurationForm">
+        Min time:<br>
+        <input type="text" id="minTimeForm">
+        <br>
+        Max time:<br>
+        <input type="text" id="maxTimeForm">
+        <input type="submit">
+        </form>
+<ul>
+    <li>{{name}}</li>
+    <li>{{description}}</li>
+    {{#each games}}
+    <li><b> <a href="#game/{{name}}"> name: {{name}}</a></b>  <button  class="delete" data-name="{{name}}">Delete</button></li>
+    {{/each}}
+</ul>

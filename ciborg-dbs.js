@@ -24,6 +24,7 @@ initElastic.editList = editList
 initElastic.addGameToList = addGameToList
 initElastic.getListById = getListById
 initElastic.removeGameFromList = removeGameFromList
+initElastic.removeList = removeList
 
 
 
@@ -36,16 +37,16 @@ function getElasticOptions(urlParam, bodyParam) {
     }
 }
 
-function processResponse(error, response, body) {
+/*function processResponse(error, response, body) {
     if (error) {
         this.executeOnError(502)
     }  //TODO lidar com erros de bad request etc...
     this.executeOnSuccess(body._id, body.result)
-}
+}*/
 
-function createList(list, finishResponse){
-    let options = getElasticOptions(elasticUrl + 'lists/_doc/', list) //TODO usar promises
-    request.post(options, processResponse.bind(finishResponse))
+function createList(list){
+    let options = getElasticOptions(elasticUrl + 'lists/_doc/', list) 
+    return requestPromise.postHttpPromise(options)
 }
 
 function editList(list, listId) {
@@ -105,6 +106,11 @@ function removeGameFromList(listId, game){
         let optionsWithList = getElasticOptions(elasticUrl + 'lists/_doc/' + listId, newList)
         return requestPromise.putHttpPromise(optionsWithList)
     })
+}
+function removeList(listId){
+    let options = getElasticOptions(elasticUrl + 'lists/_doc/' + listId)
+    let options2 = getElasticOptions(elasticUrl+ 'lists/_forcemerge')
+    return requestPromise.deleteHttpPromise(options).then(requestPromise.postHttpPromise(options2))
 }
 
 

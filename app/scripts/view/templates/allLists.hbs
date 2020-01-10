@@ -1,0 +1,20 @@
+<button id='logoutButton'>logout</button>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Actions</th>
+  </tr>
+  {{#each this}}
+  <tr>
+    <td><a href='#list/{{id}}'>{{name}}</a></td>
+    <td>{{description}}</td>
+    <td>
+      <button class="delete" id="{{id}}">Delete {{name}}</button>
+      <button class="edit" id="{{id}}">Edit List</button>
+    </td>   
+  </tr>
+  {{/each}}
+        <button id="create">Create List </button>
+</table>

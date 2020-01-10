@@ -19,7 +19,24 @@ function getPopularGames(){
 
 function searchGamesByName(nameOfGame) {
     return requestPromise.getHttpPromise(`https://www.boardgameatlas.com/api/search?name=${nameOfGame}&client_id=SB1VGnDv7M`)
-}
+    .then((body)=>{
+        let lightArrayOfGames = []
+        var index = 0
+        JSON.parse(body).games.map(heavyGame => lightArrayOfGames[index++] =
+            new gameObject(
+                heavyGame.id,
+                heavyGame.name,
+                heavyGame.year_published,
+                heavyGame.min_players,
+                heavyGame.max_players,
+                heavyGame.min_playtime,
+                heavyGame.max_playtime,
+                heavyGame.min_age,
+                heavyGame.description
+                ) 
+                )
+                return Promise.resolve(lightArrayOfGames[0])
+})}
 
 
 function getGamesByName(gameName) {

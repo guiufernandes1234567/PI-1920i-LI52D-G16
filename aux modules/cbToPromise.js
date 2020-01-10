@@ -5,24 +5,32 @@ const request = require('request')
 
 module.exports = {
 
-getHttpPromise : function getHttpPromise(url) {
+getHttpPromise : setterOfMethod('get'),
+
+putHttpPromise : setterOfMethod('put'),
+
+deleteHttpPromise : setterOfMethod('delete'),
+
+postHttpPromise : setterOfMethod('post'),
+
+}
+function setterOfMethod(defaultMethod) {
+return function HttpPromise(options, method=defaultMethod) {
     return new Promise((onSuccess, onError)=>{
-        request(url,(error, response, body)=>{
+        getRequest(method)(options,(error, response, body)=>{
             if(error){
                 return onError(error)
             } onSuccess(body)
         })
     })
-},
-
-
-putHttpPromise : function putHttpPromise(options) {
-    return new Promise((onSuccess, onError)=>{
-        request.put(options,(error, response, body)=>{
-            if(error) return onError(error)
-            onSuccess(response)
-        })
-    })
+}
 }
 
+function getRequest(method) {
+    switch(method){
+        case 'get': return request;
+        case 'put': return request.put;
+        case 'delete': return request.delete;
+        case 'post': return request.post;
+    }
 }

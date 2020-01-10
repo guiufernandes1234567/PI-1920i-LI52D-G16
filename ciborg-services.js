@@ -14,7 +14,8 @@ module.exports = (dataApi,database)=>{
     createList:createList,
     editList:editList,
     addGameToList:addGameToList,
-    removeGameFromList:removeGameFromList
+    removeGameFromList:removeGameFromList,
+    removeList : removeList
     }
 }
 
@@ -23,12 +24,12 @@ function getPopularGames(){
 }
 
 function getGamesByName(nameOfGame) {
-    return this.dataApi.searchGamesByName(nameOfGame)
+    return this.dataApi.getGamesByName(nameOfGame)
 }
 
-function createList(list, finishResponse) {
-    if(!('name' in list) || !('description' in list)) finishResponse.executeOnError(400, 'check the list submitted')
-    this.dataBase.createList(list, finishResponse)
+function createList(list) {
+    if(!('name' in list) || !('description' in list)) return Promise.reject({message:'check the list submitted'}) 
+    return this.dataBase.createList(list)
 }
 
 function getAllLists() {
@@ -40,7 +41,7 @@ function getListById(listId) {
 }
 
 function editList(list, listId) {
-    if(!('name' in list) || !('description' in list)) return Promise.resolve('check the list submitted')
+    if(!('name' in list) || !('description' in list)) return Promise.reject({message:'check the list submitted'}) 
     return this.dataBase.editList(list, listId)
 }
 
@@ -58,7 +59,11 @@ function removeGameFromList(gameName, listId) {
     })
 }
 
+function removeList(listId) {
+    return this.dataBase.removeList(listId)
+}
+
 function getGamesBoundByDuration(listId){
-    //if(min_value>=max_value || min_value<0)finishResponse.executeOnError(400, 'parameters not accepted')
+    //if(min_value>=max_value || min_value<0) return Promise.reject({message:'parameters not accepted'}) 
     return this.dataBase.getGamesBoundByDuration(listId)
 }
