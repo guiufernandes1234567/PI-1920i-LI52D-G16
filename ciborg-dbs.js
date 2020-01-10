@@ -4,9 +4,9 @@ let requestPromise = require('./aux modules/cbToPromise')
 const startElastic = require('./setup').startElastic
 
 
+startElastic()
 function initElastic(attempts = 1){
     console.log('in DB')
-    startElastic()
     request.head({
         json : true,
         headers: {'Content-Type': 'application/json'},
@@ -16,7 +16,7 @@ function initElastic(attempts = 1){
             console.log('something wrong in elastic server')
             if(attempts<5){
                 setTimeout(()=>{
-                    console.log('trying again... attempt nr '+ attempts++)
+                    console.log('trying again... attempt nr '+ attempts++ + ' out of 4')
                     initElastic(attempts)
                 },10000)
             }
