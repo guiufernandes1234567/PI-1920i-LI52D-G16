@@ -5560,7 +5560,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<button id='loginButton'>login</button>\r\n<button id='registerButton'>register</button>\r\n<button id='mostPopularButton'>most popular games</button>\r\n<button id='logoutButton'>logout</button>\r\n\r\n\r\n\r\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<button id='loginButton'>login</button>\r\n<button id='registerButton'>register</button>\r\n<button id='mostPopularButton'>most popular games</button>\r\n<button id='logoutButton'>logout</button>\r\n<button id=\"allLists\">show every list</button>\r\n\r\n\r\n\r\n\r\n");
 
 /***/ }),
 
@@ -5625,7 +5625,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("Get Games By Duration <br>\r\n<form id=\"gamesByDurationForm\">\r\n        Min time:<br>\r\n        <input type=\"text\" id=\"minTimeForm\">\r\n        <br>\r\n        Max time:<br>\r\n        <input type=\"text\" id=\"maxTimeForm\">\r\n        <input type=\"submit\">\r\n        </form>\r\n<ul>\r\n    <li>{{name}}</li>\r\n    <li>{{description}}</li>\r\n    {{#each games}}\r\n    <li><b> <a href=\"#game/{{name}}\"> name: {{name}}</a></b>  <button  class=\"delete\" data-name=\"{{name}}\">Delete</button></li>\r\n    {{/each}}\r\n</ul>");
+/* harmony default export */ __webpack_exports__["default"] = ("Get Games By Duration <br>\r\n<button id=\"allLists\">All lists</button>\r\n<form id=\"gamesByDurationForm\">\r\n        Min time:<br>\r\n        <input type=\"text\" id=\"minTimeForm\">\r\n        <br>\r\n        Max time:<br>\r\n        <input type=\"text\" id=\"maxTimeForm\">\r\n        <input type=\"submit\">\r\n        </form>\r\n<ul>\r\n    <li>{{name}}</li>\r\n    <li>{{description}}</li>\r\n    {{#each games}}\r\n    <li><b> <a href=\"#game/{{name}}\"> name: {{name}}</a></b>  <button  class=\"delete\" data-name=\"{{name}}\">Delete</button></li>\r\n    {{/each}}\r\n</ul>");
 
 /***/ }),
 
@@ -5679,6 +5679,9 @@ function homeView(data,routeManager) {
   document.querySelector('#logoutButton').addEventListener("click", function(event) {
     routeManager.changeHash('logout')
   })
+  document.querySelector("#allLists").addEventListener("click", function(){
+    routeManager.changeHash('lists')
+  })
 }
 
 function allListsView(lists, routeManager) {
@@ -5713,6 +5716,10 @@ function listView(list, routeManager) {
       setOneUseData([document.querySelector("#minTimeForm").value,document.querySelector("#maxTimeForm").value])
       routeManager.changeHash(`gameByDuration/${listId}`)
     });
+
+    document.querySelector("#allLists").addEventListener("click", function(){
+      routeManager.changeHash('lists')
+    })
 
     document.querySelectorAll('button.delete').forEach(button => {
       button.addEventListener('click',function (){

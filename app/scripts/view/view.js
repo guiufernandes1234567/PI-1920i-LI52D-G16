@@ -40,6 +40,9 @@ function homeView(data,routeManager) {
   document.querySelector('#logoutButton').addEventListener("click", function(event) {
     routeManager.changeHash('logout')
   })
+  document.querySelector("#allLists").addEventListener("click", function(){
+    routeManager.changeHash('lists')
+  })
 }
 
 function allListsView(lists, routeManager) {
@@ -74,6 +77,10 @@ function listView(list, routeManager) {
       setOneUseData([document.querySelector("#minTimeForm").value,document.querySelector("#maxTimeForm").value])
       routeManager.changeHash(`gameByDuration/${listId}`)
     });
+
+    document.querySelector("#allLists").addEventListener("click", function(){
+      routeManager.changeHash('lists')
+    })
 
     document.querySelectorAll('button.delete').forEach(button => {
       button.addEventListener('click',function (){

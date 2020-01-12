@@ -1,4 +1,4 @@
-const elasticUrl = 'http://localhost:9200/'     //meter em ficheiro mais tarde
+const elasticUrl = 'http://localhost:9200/'    
 let request = require("request")
 let requestPromise = require('./aux modules/cbToPromise')
 const startElastic = require('./setup').startElastic
@@ -18,13 +18,11 @@ function initElastic(attempts = 1){
                 setTimeout(()=>{
                     console.log('trying again... attempt nr '+ attempts++ + ' out of 4')
                     initElastic(attempts)
-                },10000)
+                },15000)
             }
         } else{ if(response.statusCode == 404)request.put('http://localhost:9200/lists')
              console.log(`elastic operational after ${attempts} attempts`)
     }
-        
-        
     } )
 }
 
@@ -49,12 +47,6 @@ function getElasticOptions(urlParam, bodyParam) {
     }
 }
 
-/*function processResponse(error, response, body) {
-    if (error) {
-        this.executeOnError(502)
-    }  //TODO lidar com erros de bad request etc...
-    this.executeOnSuccess(body._id, body.result)
-}*/
 
 function createList(list){
     let options = getElasticOptions(elasticUrl + 'lists/_doc/', list) 

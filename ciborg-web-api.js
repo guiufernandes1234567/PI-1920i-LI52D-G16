@@ -55,7 +55,7 @@ function getPopularGames(req,resp){
     ciborgServices.getPopularGames().then((requestBody)=>{
         resp.status(200).json(fromBodyToArrayOfGames(requestBody))
     }).catch((error)=>{
-        resp.status(400).json(error) //TODO: ver se as mensagens de erro fazem sentido passarem ao cliente
+        resp.status(400).json(error) 
     })
 }
 
@@ -100,7 +100,7 @@ function getGamesBoundByDuration(req,resp){
         ((parseInt(req.params.max_value) > item.max_playtime))))
         resp.status(200).json(filteredArray.sort((a,b)=>{return a.max_playtime-b.max_playtime}))
     }).catch((error)=>{
-        resp.status(400).json(error) //TODO: ver se as mensagens de erro fazem sentido passarem pro cliente
+        resp.status(400).json(error) 
     })
 }
 
@@ -135,7 +135,6 @@ function editList(req,resp){
         }
     ).catch((error) =>{
         resp.status(400)
-    //    if(error) resp.json(error)
         resp.json(error)
 })
 }

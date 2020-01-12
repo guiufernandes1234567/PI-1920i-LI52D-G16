@@ -3,7 +3,6 @@
 var express = require('./node_modules/express')
 var app = express()
 
-
 const PORT = require('./setup').PORT
 
 const ciborgWebApi = require('./ciborg-web-api')
@@ -22,7 +21,7 @@ app.use(expressSession(
     {
            resave: false,
            saveUninitialized: true,
-           //store: new FileStore(),
+           store: new FileStore(),
            secret: "ultra safe key"
     }
 ))

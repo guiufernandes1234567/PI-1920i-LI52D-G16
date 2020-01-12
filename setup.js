@@ -11,6 +11,6 @@ module.exports = {
 }
 
 function startElasticSearch(){
-    console.log(ELASTIC_LOCATION + '\\bin\\elasticsearch.bat')
+    console.log("starting " + ELASTIC_LOCATION + '\\bin\\elasticsearch.bat')
     cp.spawn(ELASTIC_LOCATION + '\\bin\\elasticsearch.bat'); 
 }
