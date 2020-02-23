@@ -13,15 +13,15 @@ function initElastic(attempts = 1){
         url : 'http://localhost:9200/lists',
     },(error, response, body)=>{
         if(error) {
-            console.log('something wrong in elastic server')
+            console.log('something wrong in elastic server. trying again...')
             if(attempts<5){
                 setTimeout(()=>{
-                    console.log('trying again... attempt nr '+ attempts++ + ' out of 4')
+                    console.log('attempt nr '+ attempts++ + ' out of 4')
                     initElastic(attempts)
                 },15000)
             }
         } else{ if(response.statusCode == 404)request.put('http://localhost:9200/lists')
-             console.log(`elastic operational after ${attempts} attempts`)
+             console.log(`elastic operational after ${attempts-1} attempts`)
     }
     } )
 }
@@ -64,7 +64,7 @@ function editList(list, listId) {
 }
 
 function getAllLists() {
-    let options = getElasticOptions(elasticUrl + 'lists/_search', {query: { match_all: {} }})
+    let options = getElasticOptions(elasticUrl + 'lists/_search', {from : 0, size : 1000,query: { match_all: {} }})
     return requestPromise.getHttpPromise(options)
 }
 
@@ -72,17 +72,6 @@ function getGamesBoundByDuration (listId) {
     let options = getElasticOptions(elasticUrl + 'lists/_doc/' + listId)
     return requestPromise.getHttpPromise(options)
 }
-
-
-/*function getListByName(listName, finishResponse) {
-    let options = getElasticOptions(elasticUrl + 'lists/_search', {query: { match: { name: listName } }})
-    request.get(options, (error, response, body) => {
-        if (error) {
-            finishResponse.executeOnError()
-        }
-        finishResponse.executeOnSuccess(body._source)
-    })
-}*/
 
 function getListById(listId) {
     let options = getElasticOptions(elasticUrl + 'lists/_doc/' + listId)

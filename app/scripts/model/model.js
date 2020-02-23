@@ -25,9 +25,11 @@ const baseUrl = "http://localhost:8000/"
                   'Content-Type': 'application/json'
                 }
               }))
+              let a = Date.now()+500
+              while(Date.now()<a){}
             });
           }
-          return Promise.all(promiseArray)   //uma promise com um array de responses
+          return Promise.all(promiseArray)  
         }).then(response => {
           console.log(response)
           return id
