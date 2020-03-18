@@ -44,7 +44,7 @@ passport.serializeUser((user, done)=> {
   });
   
   passport.deserializeUser((id, done) =>{
-    console.log('serialize user called')
+    console.log('deserialize user called')
     let user = authentication.getUser(id)
       done(null,user);
    } );
